@@ -1,7 +1,10 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,9 +12,13 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -39,8 +46,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
-        if (!password.equals(employee.getPassword())) {
+        //将前端输入的明文密码进行md5加密处理
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+        if (!password.equals(employee.getPassword())) {//与数据库中的密码进行比较
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
@@ -52,6 +60,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    @Override //新增员工
+    public void save(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+
+        //对象属性拷贝，将 employeeDTO的属性值 复制给 employee
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        //设置账号的状态，默认正常状态 1表示正常 0表示锁定
+        employee.setStatus(StatusConstant.ENABLE);
+
+        //设置密码，默认密码123456，进行md5加密处理后存入数据库
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+
+        //设置当前记录的创建时间和修改时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //设置当前记录创建人id和修改人id
+        employee.setCreateUser(BaseContext.getCurrentId());//获取线程局部变量中的值，即在interceptor中存入线程的当前登录员工的id
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        employeeMapper.insert(employee);//存入数据库
     }
 
 }
