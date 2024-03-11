@@ -19,4 +19,10 @@ public interface EmployeeService {
 
     public PageResult page(EmployeePageQueryDTO employeePageQueryDTO);//员工分页查询
 
+    public void startOrStop(Integer status,Long id);//启用禁用员工账号
+
+    public Employee getById(Long id); //根据id查询员工信息
+
+    public void update(EmployeeDTO employeeDTO);
+
 }

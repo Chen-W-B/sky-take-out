@@ -13,6 +13,7 @@ import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
+import com.sky.interceptor.JwtTokenAdminInterceptor;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
@@ -109,5 +110,44 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total = page.getTotal();//总记录数
         List<Employee> records = page.getResult();//当前页数据集合
         return new PageResult(total,records);
+    }
+
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     * */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //通过在Employee类中添加@Builder注释，来调用builder方法，而不使用setter方法，代码更加简洁方便
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     * */
+    @Override
+    public Employee getById(Long id) {
+        return employeeMapper.getById(id);
+    }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     * */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        //对象属性拷贝，将 employeeDTO的属性值 复制给 employee
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());//获取线程局部变量中的值，即在interceptor中存入线程的当前登录员工的id
+        employeeMapper.update(employee);
     }
 }

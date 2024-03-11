@@ -23,6 +23,11 @@ public interface EmployeeMapper {
             "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})")
     public void insert(Employee employee); //新增员工
 
-    public Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO);
+    public Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO); //员工分页查询
+
+    public void update(Employee employee); //根据主键id动态修改员工的属性值
+
+    @Select("select * from employee where id = #{id}")
+    public Employee getById(Long id);
 
 }
