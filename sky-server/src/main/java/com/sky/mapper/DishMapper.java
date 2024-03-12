@@ -12,6 +12,6 @@ public interface DishMapper {
      * @return
      */
     @Select("select count(id) from dish where category_id = #{categoryId}")
-    Integer countByCategoryId(Long categoryId);
+    public Integer countByCategoryId(Long categoryId);
 
 }
