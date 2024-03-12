@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: dev  #配置环境 application-dev.yml
   main:
     allow-circular-references: true
   datasource:
@@ -37,3 +37,9 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+
+  alioss:
+    endpoint: ${sky.alioss.endpoint} #服务器地址
+    access-key-id: ${sky.alioss.access-key-id}
+    access-key-secret: ${sky.alioss.access-key-secret}
+    bucket-name: ${sky.alioss.bucket-name} #服务器名称

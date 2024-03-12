@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@ApiModel("新增员工时传递的数据模型")
+@ApiModel("新增/修改员工时传递的数据模型")
 public class EmployeeDTO implements Serializable {
 
     @ApiModelProperty("员工id")

@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@ApiModel("分页查询时传递的数据模型")
+@ApiModel("员工分页查询时传递的数据模型")
 public class EmployeePageQueryDTO implements Serializable {
 
     @ApiModelProperty("员工姓名")
