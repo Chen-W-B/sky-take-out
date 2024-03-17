@@ -12,3 +12,9 @@ sky:
     access-key-id: LTAI5tEnMay4pRr2s6SzFmEX
     access-key-secret: MwiW5Y5ji46p29XuZ71dXokIbKDGy4
     bucket-name: chen-w-b
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 10  #指定使用Redis的哪个数据库，Redis服务启动后默认有16个数据库，编号分别是从0到15
